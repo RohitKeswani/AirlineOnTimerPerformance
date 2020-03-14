@@ -1,0 +1,11 @@
+SQL STATEMENTS USED:
+1. /usr/local/mysql/bin/mysql -u root -p (password) //enter your root password.
+2. CREATE database airlineperformance;
+3. CREATE USER 'bdaproject'@'localhost' IDENTIFIED BY (password); //enter the bdaproject password and update it in code
+Test.java , Line 10.
+4. GRANT ALL PRIVILEGES ON airlineperformance.* TO 'bdaproject'@'localhost';
+exit and log in with bdaproject user.
+
+//following steps not necessary but good to check if database is available for bdaproject
+5. /usr/local/mysql/bin/mysql -u bdaproject -p (password) //bdaproject password.
+6. USE airlineperformance;

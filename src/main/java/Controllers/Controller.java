@@ -37,7 +37,9 @@ public class Controller {
                     else
                         preparedStatement.setInt(i+1, Integer.parseInt(record[i]));
                 }
-              numberOfRecordsInserted += preparedStatement.executeUpdate();
+                int returnValue = preparedStatement.executeUpdate();
+                if(returnValue == 1)
+                    numberOfRecordsInserted++;
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -49,7 +51,7 @@ public class Controller {
         return numberOfRecordsInserted;
     }
 
-    public boolean createTable(String tablename, Connection connection){
+    public void createTable(String tablename, Connection connection){
         String createTableQuery = "CREATE TABLE "+tablename+" (Year int, Month int, Day int, DayOfWeek int, " +
                 "CarrierID varchar(255), FlightNumber int, OriginAirport varchar(255), DestinationAirport varchar(255), " +
                 "ScheduledDepartureTime int, ActualDepartureTime int, DepartureDelay int, TaxiOutTime int, TaxiInTime int, " +
@@ -57,10 +59,10 @@ public class Controller {
                 "ActualElapsedTime int, AirTime int, Distance int);";
         try(PreparedStatement preparedStatement  = connection.prepareStatement(createTableQuery))
         {
-            return preparedStatement.execute();
+            preparedStatement.execute();
         } catch (SQLException e) {
+            System.out.println(e);
             e.printStackTrace();
         }
-        return false;
     }
 }

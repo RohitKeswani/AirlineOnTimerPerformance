@@ -12,13 +12,9 @@ public class Test {
         String tablename = "airlinestatistics";
         Controller controller = new Controller();
         Connection connection = controller.createConnection(database, user, password);
-        if(controller.createTable(tablename, connection))
-        {
-            System.out.println("Table "+tablename+" successfully created");
-            int numberOfRecordsInserted = controller.insertAllData(pathToFile, connection);
-            System.out.println(numberOfRecordsInserted+" records successfully inserted");
-        }
-        else
-            System.out.println("Error in creating table "+tablename);
+        controller.createTable(tablename, connection);
+        System.out.println("Table "+tablename+" successfully created");
+        int numberOfRecordsInserted = controller.insertAllData(pathToFile, connection);
+        System.out.println(numberOfRecordsInserted+" records successfully inserted");
     }
 }
