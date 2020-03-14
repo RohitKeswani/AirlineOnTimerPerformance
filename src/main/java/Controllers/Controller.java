@@ -8,7 +8,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Controller {
@@ -17,13 +16,13 @@ public class Controller {
             "OriginAirport, DestinationAirport, ScheduledDepartureTime, ActualDepartureTime, DepartureDelay," +
             "TaxiOutTime, TaxiInTime, ScheduledArrivalTime, ActualArrivalTime, ArrivalDelay, ScheduledElapsedTime," +
             "ActualElapsedTime, AirTime, Distance) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-    String temp = "SELECT * FROM airlinestatistics ;";
     public Connection createConnection(String database, String user, String password)
     {
         return utility.createConnection(database, user, password);
     }
-    public void insertAllData(String pathToFile, Connection connection)
+    public int insertAllData(String pathToFile, Connection connection)
     {
+        int numberOfRecordsInserted = 0;
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(pathToFile))) {
             PreparedStatement preparedStatement = connection.prepareStatement(SQLStatement);
             String line ="";
@@ -38,7 +37,7 @@ public class Controller {
                     else
                         preparedStatement.setInt(i+1, Integer.parseInt(record[i]));
                 }
-              System.out.println(preparedStatement.executeUpdate());
+              numberOfRecordsInserted += preparedStatement.executeUpdate();
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -47,5 +46,21 @@ public class Controller {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return numberOfRecordsInserted;
+    }
+
+    public boolean createTable(String tablename, Connection connection){
+        String createTableQuery = "CREATE TABLE "+tablename+" (Year int, Month int, Day int, DayOfWeek int, " +
+                "CarrierID varchar(255), FlightNumber int, OriginAirport varchar(255), DestinationAirport varchar(255), " +
+                "ScheduledDepartureTime int, ActualDepartureTime int, DepartureDelay int, TaxiOutTime int, TaxiInTime int, " +
+                "ScheduledArrivalTime int, ActualArrivalTime int, ArrivalDelay int, ScheduledElapsedTime int, " +
+                "ActualElapsedTime int, AirTime int, Distance int);";
+        try(PreparedStatement preparedStatement  = connection.prepareStatement(createTableQuery))
+        {
+            return preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
